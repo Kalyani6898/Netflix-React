@@ -1,12 +1,66 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { auth } from "../util/firebase";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { onAuthStateChanged } from "firebase/auth";
+import { addUser, removeUser } from "../util/userSlice";
+import { LOGO } from "../util/constant";
 const Header = () => {
+  const user = useSelector((store) => store.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uId, email, displayName, photoURL } = user;
+        dispatch(
+          addUser({
+            uId: uId,
+            email: email,
+            displayName: displayName,
+            photoURL: photoURL,
+          })
+        );
+        navigate("/browse");
+      } else {
+        dispatch(removeUser());
+        navigate("/");
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+  const signOutFun = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("Signed Out");
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate("/error");
+      });
+  };
   return (
-    <div className="absolute px-8 py-2 bg-gradient-to-b from-black z-10 w-full">
-      <img
-        className="w-44 bg-gradient-to-b from-black"
-        src="https://help.nflxext.com/helpcenter/OneTrust/oneTrust_production/consent/87b6a5c0-0104-4e96-a291-092c11350111/01938dc4-59b3-7bbc-b635-c4131030e85f/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png"
-        alt="logo"
-      ></img>
+    <div className="absolute px-8 py-2 bg-gradient-to-b from-black z-10 w-screen flex justify-between">
+      <img className="w-44" src={LOGO} alt="logo"></img>
+      {user && (
+        <div className="flex p-2">
+          <img
+            className="rounded-lg w-12 h-12"
+            //src={user.photoURL}
+            src={user?.photoURL}
+            alt="user icon"
+          ></img>
+          <button
+            className="text-white font-bold"
+            onClick={() => {
+              signOutFun();
+            }}
+          >
+            (Sign Out)
+          </button>
+        </div>
+      )}
     </div>
   );
 };

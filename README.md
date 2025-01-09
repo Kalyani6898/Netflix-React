@@ -15,6 +15,12 @@
 -Unsubscribe to onAuthStateChanged callback
 -Register to tmdb API & create an app
 -Get data from tmdb for now playing movies
+-Build secondary component
+-Build Movie ist
+-Build Movie card
+-TMDB img cdn
+-Made browse page amazing with tailwind css
+-usePopularMovies custom hooks
 
 # Features
 

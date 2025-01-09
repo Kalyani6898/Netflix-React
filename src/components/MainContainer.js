@@ -7,7 +7,6 @@ const MainContainer = () => {
   const movies = useSelector((store) => store.movies?.nowPlayingMovies);
   if (movies.length === 0) return;
   const mainMovie = movies[0];
-  console.log(mainMovie);
   return (
     <div className="">
       <VideoTitle

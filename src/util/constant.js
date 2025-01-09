@@ -14,3 +14,4 @@ export const OPTIONS = {
   },
 };
 export const YOU_TUBE_URL = "https://www.youtube.com/watch?v=";
+export const IMG_CDN_URL = "https://image.tmdb.org/t/p/w500/";
